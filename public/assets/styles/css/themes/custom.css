@@ -1,0 +1,45 @@
+.reprovar {
+    color:#f44336;
+}
+.card {
+    margin:50px 0;
+}
+.logo-site {
+    width: auto!important;
+}
+.btn-secundary {
+    background:#ffd6bc;
+    color:#fff;
+}
+.btn-secundary:hover, .btn-secundary:active {
+    background:#ff6c0c;
+    box-shadow: 0 8px 25px -8px #ff6c0c;
+    color:#fff;
+}
+.card h3 {
+    font-size: 16px;
+    font-weight: bold;
+}
+.card h2 {
+    font-size: 22px;
+    font-weight: bold;
+    min-height: 80px;
+}
+.card h4 {
+    font-size: 14px;
+}
+.input-group.input-group-lg [type=text].form-control {
+    height: auto;
+}
+.card-icon-bg-primary [class^=i-] {
+    color: rgb(255, 108, 12);
+}
+.card-custom  {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+.card-custom:hover {
+    background: rgba(0, 116, 66, 0.05);
+    -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
