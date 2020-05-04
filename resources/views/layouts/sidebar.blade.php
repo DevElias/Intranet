@@ -5,7 +5,7 @@
         	<li class="nav-item {{ request()->is('dashboard-admin') ? 'active' : '' }}">
                 <a class="nav-item-hold" href="/dashboard-admin">
                     <i class="nav-icon i-Bar-Chart"></i>
-                    <span class="nav-text">Dashboard</span>
+                    <span class="nav-text">Infos Gerais</span>
                 </a>
                 <div class="triangle"></div>
             </li>
@@ -13,7 +13,7 @@
             <li class="nav-item {{ request()->is('dashboard-cliente') ? 'active' : '' }}">
                 <a class="nav-item-hold" href="/dashboard-cliente">
                     <i class="nav-icon i-Bar-Chart"></i>
-                    <span class="nav-text">Dashboard</span>
+                    <span class="nav-text">Infos Gerais</span>
                 </a>
                 <div class="triangle"></div>
             </li>
@@ -32,20 +32,22 @@
                 </a>
                 <div class="triangle"></div>
             </li>
+            <?php if($_SESSION['tipo'] == 1){?>
             <li class="nav-item">
-                <a class="nav-item-hold" href="#" target="_blank">
+                <a class="nav-item-hold" href="http://santistacontroleambiental.com.br/contato/" target="_blank">
                     <i class="nav-icon i-File-Bookmark"></i>
                     <span class="nav-text">Solicite um orçamento</span>
                 </a>
                 <div class="triangle"></div>
             </li>
             <li class="nav-item">
-                <a class="nav-item-hold" href="#" target="_blank">
+                <a class="nav-item-hold" href="https://api.whatsapp.com/send?phone=5513997916180" target="_blank">
                     <i class="nav-icon i-People-on-Cloud"></i>
                     <span class="nav-text">Atendimento</span>
                 </a>
                 <div class="triangle"></div>
             </li>
+            <?php } ?>
             <?php if($_SESSION['tipo'] == 0){?>
             <li class="nav-item {{ request()->is('dados') ? 'active' : '' }}" data-item="dados">
                 <a class="nav-item-hold" href="#">
@@ -89,10 +91,18 @@
         </ul>
         <!-- Submenu Dashboards -->
         <ul class="childNav" data-parent="aprovacoes">
+     <?php if($_SESSION['tipo'] == 0){?>
+        <li class="nav-item ">
+                <a class="" href="/aprovacoes/usuarios">
+                    <i class="nav-icon i-Business-Man"></i>
+                    <span class="item-name">Usuários</span>
+                </a>
+            </li>
+     <?php }?>
             <li class="nav-item ">
                 <a class="" href="/aprovacoes/clientes">
                     <i class="nav-icon i-Business-Man"></i>
-                    <span class="item-name">Clientes</span>
+                    <span class="item-name">Usuários em Empresas</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -108,7 +118,7 @@
             <li class="nav-item ">
                 <a class="" href="/dados/clientes">
                     <i class="nav-icon i-Business-Man"></i>
-                    <span class="item-name">Clientes</span>
+                    <span class="item-name">Usuários</span>
                 </a>
             </li>
             <li class="nav-item">

@@ -42,6 +42,7 @@ Route::get('vertical/starter/blank-vertical', function () {
 
 Route::get('/aprovacoes/empresas', 'EmpresaController@aprovacoes');
 Route::get('/aprovacoes/clientes', 'EmpresaController@aprovacliente');
+Route::get('/aprovacoes/usuarios', 'UsuarioController@listausuario');
 Route::get('/empresa', 'EmpresaController@index');
 Route::get('/empresa/vinculo', 'EmpresaController@listagem');
 Route::view('/empresa/nova', 'empresa.nova')->name('nova');
@@ -61,6 +62,9 @@ Route::view('/empresa/nova', 'empresa.nova')->name('nova');
  Route::get('/minha-conta/{id}', ['uses' => 'UsuarioController@profile']);
  Route::post('/atualizar', ['uses' => 'UsuarioController@update']);
  Route::post('/enviar/senha', ['uses' => 'UsuarioController@esqueci']);
+ Route::post('/aprovar/usuario', ['uses' => 'UsuarioController@aprovar']);
+ Route::post('/reprovar/usuario', ['uses' => 'UsuarioController@reprovar']);
+ 
  //Company
  Route::post('/lista/empresa', ['uses' => 'EmpresaController@index']);
  Route::post('/cadastrar/empresa', ['uses' => 'EmpresaController@create']);

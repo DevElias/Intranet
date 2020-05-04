@@ -23,7 +23,7 @@ class EmpresaController extends Controller
         # Administrador
         if($_SESSION['tipo'] == '0')
         {
-            $aEmpresas = DB::table('empresa')->join('usuario', 'usuario.id', '=', 'empresa.id_responsavel')->get(['empresa.*','usuario.nome']);
+            $aEmpresas = DB::table('empresa')->join('usuario', 'usuario.id', '=', 'empresa.id_responsavel')->where('empresa.status', '!=', '2')->get(['empresa.*','usuario.nome']);
             
             return view('empresa.empresa')->with('empresas', $aEmpresas);
         }
@@ -42,7 +42,7 @@ class EmpresaController extends Controller
                                      FROM solicitacao
                                          INNER JOIN empresa ON empresa.id = solicitacao.id_empresa
                                          INNER JOIN usuario responsavel ON responsavel.id = empresa.id_responsavel
-                                     WHERE solicitacao.id_usuario = '. $_SESSION['id']);
+                                     WHERE solicitacao.id_usuario = '. $_SESSION['id'] . ' AND empresa.status != 2');
             
             //$aEmpresas = DB::table('empresa')->where('empresa.usuario_inclusao', '=', $_SESSION['id'])->join('usuario', 'usuario.id', '=', 'empresa.id_responsavel')->get(['empresa.*','usuario.nome']);
             return view('empresa.empresa')->with('empresas', $aEmpresas);
@@ -67,6 +67,7 @@ class EmpresaController extends Controller
         $empresa->bairro         = $request->bairro;
         $empresa->cidade         = $request->cidade;
         $empresa->estado         = $request->estado;
+        $empresa->segmento       = $request->segmento;
         $empresa->id_responsavel = $_SESSION['id'];
         
         # Administrador
@@ -118,7 +119,8 @@ class EmpresaController extends Controller
         }
         catch (Exception $e)
         {
-            $message[] = $e->getMessage();
+            //$message[] = $e->getMessage();
+            $message[] = '';
             $code      = 500;
             $redirect  = '';
         }
@@ -246,18 +248,9 @@ class EmpresaController extends Controller
             'data_notificacao' => date("Y-m-d H:i:s")
         ]);
         
-        if(!empty($results))
-        {
-            $message[] = 'Empresa aprovada com sucesso!';
-            $code = 200;
-            $redirect = '/aprovacoes/empresas';
-        }
-        else
-        {
-            $message[] = 'Erro ao tentar aprovar empresa';
-            $code = 500;
-            $redirect = '';
-        }
+        $message[] = 'Empresa aprovada com sucesso!';
+        $code = 200;
+        $redirect = '/aprovacoes/empresas';
         
         # feedback
         $code = (!empty($code)) ? $code : 200;
@@ -299,18 +292,9 @@ class EmpresaController extends Controller
             'data_notificacao' => date("Y-m-d H:i:s")
         ]);
         
-        if(!empty($results))
-        {
-            $message[] = 'Empresa reprovada com sucesso!';
-            $code = 200;
-            $redirect = '/aprovacoes/empresas';
-        }
-        else
-        {
-            $message[] = 'Erro ao tentar reprovar empresa';
-            $code = 500;
-            $redirect = '';
-        }
+        $message[] = 'Empresa reprovada com sucesso!';
+        $code = 200;
+        $redirect = '/aprovacoes/empresas';
         
         # feedback
         $code = (!empty($code)) ? $code : 200;
@@ -320,11 +304,15 @@ class EmpresaController extends Controller
     public function conteudo($id)
     {
         $aPermissao = DB::table('solicitacao')->where('solicitacao.id_empresa', '=', $id)->where('solicitacao.id_usuario', '=', $_SESSION['id'])->where('solicitacao.status', '=', 1)->get();
+        
         # Nao permite o usuario burlar o sistema pela URL
-        if($aPermissao->isEmpty())
+        if($_SESSION['tipo'] != '0')
         {
-            header("Location: /404");
-            die();
+            if($aPermissao->isEmpty())
+            {
+                header("Location: /404");
+                die();
+            }
         }
         
         # pasta com id da empresa        
@@ -831,6 +819,7 @@ class EmpresaController extends Controller
             'bairro'              => $input['bairro'],
             'cidade'              => $input['cidade'],
             'estado'              => $input['estado'],
+            'segmento'            => $input['segmento'],
             'usuario_alteracao'   => $_SESSION['id'],
             'data_alteracao'      => date("Y-m-d H:i:s")
         ]);

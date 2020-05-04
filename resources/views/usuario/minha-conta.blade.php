@@ -21,14 +21,14 @@
                         <form method="POST" action="#">
                                     <div class="form-group row">
                                     <div class="col-6">
-                                        <label for="nome">Nome Completo</label>
+                                        <label for="nome">Nome Completo *</label>
                                         <input id="nome" type="text"
                                             class="form-control-rounded form-control"
                                             name="nome"  disabled="disabled" value="<?php echo($dados->nome);?>"
                                             autofocus>
                                     </div>
                                     <div class="col-6">
-                                        <label for="email">Email</label>
+                                        <label for="email">Email *</label>
                                         <input id="email" type="email" disabled="disabled"
                                             class="form-control-rounded form-control"
                                             name="email" value="<?php echo($dados->email);?>"  required autocomplete="email">
@@ -37,14 +37,14 @@
                                     </div>
                                     <div class="form-group row">
                                     <div class="col-6">
-                                        <label for="cpf">CPF</label>
+                                        <label for="cpf">CPF *</label>
                                         <input id="cpf" type="text"
                                             class="form-control-rounded form-control"
                                             name="cpf" value="<?php echo($dados->cpf);?>" disabled="disabled"
                                             autofocus>
                                     </div>
                                     <div class="col-6">
-                                    <label for="nascimento">Data de Nascimento</label>
+                                    <label for="nascimento">Data de Nascimento *</label>
                                         <input id="nascimento" type="text"
                                             class="form-control-rounded form-control"
                                             name="nascimento" value="<?php echo($dados->data_nascimento);?>"  required
@@ -53,14 +53,14 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-6">
-                                                <label for="telefone">Telefone</label>
+                                                <label for="telefone">Telefone *</label>
                                                 <input id="telefone" type="text"
                                             class="form-control-rounded form-control"
                                             name="tel" value="<?php echo($dados->telefone);?>" required
                                             autofocus>
                                             </div>
                                         <div class="col-6">
-                                            <label for="whatsapp">Whatsapp</label>
+                                            <label for="whatsapp">Whatsapp *</label>
                                             <input id="whatsapp" type="text"
                                             class="form-control-rounded form-control"
                                             name="whats" value="<?php echo($dados->whatsapp);?>" required
@@ -69,14 +69,14 @@
                                     </div>
                                     <div class="form-group row">
                                     <div class="col-3">
-                                        <label for="cep">CEP</label>
+                                        <label for="cep">CEP *</label>
                                         <input id="cep" type="text"
                                             class="form-control-rounded form-control"
                                             name="cep" value="<?php echo($dados->cep);?>" required
                                             autofocus>
                                     </div>
                                     <div class="col-9">
-                                        <label for="endereco">Endereço</label>
+                                        <label for="endereco">Endereço *</label>
                                         <input id="endereco" type="text"
                                             class="form-control-rounded form-control"
                                             name="endereco" value="<?php echo($dados->endereco);?>" required
@@ -85,7 +85,7 @@
                                     </div>
                                     <div class="row form-group">
                                     <div class="col-3">
-                                        <label for="numero">Numero</label>
+                                        <label for="numero">Numero *</label>
                                         <input id="numero" type="text"
                                             class="form-control-rounded form-control"
                                             name="numero" value="<?php echo($dados->numero);?>" required
@@ -100,7 +100,7 @@
                                     </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="bairro">Bairro</label>
+                                        <label for="bairro">Bairro *</label>
                                         <input id="bairro" type="text"
                                             class="form-control-rounded form-control"
                                             name="bairro" value="<?php echo($dados->bairro);?>" required
@@ -108,7 +108,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-6">
-                                            <label for="cidade">Cidade</label>
+                                            <label for="cidade">Cidade *</label>
                                             <input id="cidade" type="text"
                                                 class="form-control-rounded form-control"
                                                 name="cidade" value="<?php echo($dados->cidade);?>" required
@@ -119,7 +119,7 @@
                                             autofocus>
                                         </div>
                                         <div class="col-6">
-                                        <label for="estado">Estado</label>
+                                        <label for="estado">Estado *</label>
                                             <input id="estado" type="text"
                                                 class="form-control-rounded form-control"
                                                 name="nome" value="<?php echo($dados->estado);?>" required
@@ -128,7 +128,7 @@
                                     </div>
                                     <div class="form-group row">
                                     <div class="col-6">
-                                        <label for="senha">Senha</label>
+                                        <label for="senha">Senha *</label>
                                         <input id="senha" type="password"
                                             class="form-control-rounded form-control"
                                             name="password" value="<?php echo($dados->senha);?>" required>

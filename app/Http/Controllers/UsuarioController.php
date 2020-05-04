@@ -20,21 +20,30 @@ class UsuarioController extends Controller
     {
         session_start();
         $input  = $request->all();
-        $id  = Usuario::where('email', '=', $input['email'])->where('senha', '=', $input['senha'])->orWhere('cpf', '=', $input['email'])->where('senha', '=', $input['senha'])->pluck('id');
-        
+        $id  = Usuario::where('email', '=', $input['email'])->where('senha', '=', $input['senha'])->where('status', '=', 1)->orWhere('cpf', '=', $input['email'])->where('senha', '=', $input['senha'])->where('status', '=', 1)->pluck('id');
+
         if($id->isNotEmpty())
         {
             $aUser = Usuario::find($id);
+
+            $_SESSION['id']     = $aUser[0]->id;
+            $_SESSION['nome']   = $aUser[0]->nome;
+            $_SESSION['email']  = $aUser[0]->email;
+            $_SESSION['cpf']    = $aUser[0]->cpf;
+            $_SESSION['tipo']   = $aUser[0]->tipo_usuario;
+            $_SESSION['status'] = $aUser[0]->status;
             
-            $_SESSION['id']    = $aUser[0]->id;
-            $_SESSION['nome']  = $aUser[0]->nome;
-            $_SESSION['email'] = $aUser[0]->email;
-            $_SESSION['cpf']   = $aUser[0]->cpf;
-            $_SESSION['tipo']  = $aUser[0]->tipo_usuario;
-            
+            if($_SESSION['status'] == 0)
+            {
+                $message[] = 'Usu&aacute;rio pendente de aprova&ccedil;&atilde;o';
+                $code      = 500;
+                $redirect  = 'nao direciona';
+                return response(['response' => $message, 'code' => $code, 'redirect' => $redirect]);
+            }
+
             $message[] = 'Usuario logado com sucesso!';
             $code      = 200;
-            
+
             if($_SESSION['tipo'] == '0')
             {
                 $redirect  = '/dashboard-admin';
@@ -50,12 +59,12 @@ class UsuarioController extends Controller
             $code      = 500;
             $redirect  = 'nao direciona';
         }
-        
+
         # feedback
         $code = (!empty($code)) ? $code : 200;
         return response(['response' => $message, 'code' => $code, 'redirect' => $redirect]);
     }
-    
+
     public function logout()
     {
         session_start();
@@ -63,7 +72,7 @@ class UsuarioController extends Controller
         header('Location: /');
         die();
     }
-    
+
     public function index()
     {
         //
@@ -73,7 +82,7 @@ class UsuarioController extends Controller
     {
         $input   = $request->all();
         $usuario = new Usuario;
-        
+
         $usuario->nome              = $request->nome;
         $usuario->email             = $request->email;
         $usuario->cpf               = $request->cpf;
@@ -89,29 +98,26 @@ class UsuarioController extends Controller
         $usuario->estado            = $request->estado;
         $usuario->senha             = $request->senha;
         $usuario->tipo_usuario      = '1';
-        $usuario->status            = '1';
+        $usuario->status            = '0'; // Entra como Pendente
         $usuario->data_inclusao     = date('Y-m-d H:i:s');
         $usuario->usuario_inclusao  = '0'; // Cadastrado Manualmente
         $usuario->usuario_alteracao = '0';
-                
-        try
+
+        $usuario->save();
+
+        if($usuario->wasRecentlyCreated == 1)
         {
-            $usuario->save();
-            
-            if($usuario->wasRecentlyCreated == 1)
-            {
-                $message[] = 'Usu&aacute;rio cadastrado com sucesso!';
-                $code      = 200;
-                $redirect  = '/';
-            }
+            $message[] = 'Ol&aacute;! Aguarde a aprova&ccedil;&atilde;o do seu cadastro para manusear nossos recursos. Em breve retornaremos.';
+            $code      = 200;
+            $redirect  = '/';
         }
-        catch (Exception $e)
+        else
         {
-            $message[] = $e->getMessage();
+            $message[] = 'Erro ao Cadastrar Usu&aacute;rio';
             $code      = 500;
             $redirect  = '';
         }
-        
+
         # feedback
         $code = (!empty($code)) ? $code : 200;
         return response(['response' => $message, 'code' => $code, 'redirect' => $redirect]);
@@ -120,7 +126,7 @@ class UsuarioController extends Controller
     public function profile($id)
     {
         session_start();
-        
+
         if($_SESSION['id'] != $id)
         {
             header("Location: /404");
@@ -132,13 +138,13 @@ class UsuarioController extends Controller
             return view('usuario.minha-conta')->with('dados', $aDados);
         }
     }
-    
+
     public function update(Request $request)
     {
         session_start();
-        
+
         $input   = $request->all();
-        
+
         $results = DB::table('usuario')
                 ->where('id', $input['id'])
                 ->update(['data_nascimento'   => $input['nascimento'],
@@ -155,7 +161,7 @@ class UsuarioController extends Controller
                           'usuario_alteracao' => $_SESSION['id'],
                           'data_alteracao'    => date("Y-m-d H:i:s")
                 ]);
-        
+
                 if(!empty($results))
                 {
                     $message[] = 'Usu&aacute;rio alterado com sucesso!';
@@ -168,17 +174,17 @@ class UsuarioController extends Controller
                     $code = 500;
                     $redirect = '';
                 }
-                
+
                 # feedback
                 $code = (!empty($code)) ? $code : 200;
                 return response(['response' => $message, 'code' => $code, 'redirect' => $redirect]);
     }
-    
+
     public function esqueci(Request $request)
     {
         $aUsuario =  DB::select("SELECT * FROM usuario WHERE usuario.email = '" . $request->email . "'");
         $mail     = new PHPMailer\PHPMailer();
-        
+
         if(!empty($aUsuario))
         {
             //Server settings
@@ -189,11 +195,11 @@ class UsuarioController extends Controller
             $mail->SMTPAuth = true;
             $mail->Username = "noreply@santistacontroleambiental.com.br";
             $mail->Password = "WMorais@20";
-            
+
             //Recipients
             $mail->setFrom('noreply@santistacontroleambiental.com.br', 'Santista Sistema');
-            $mail->addAddress($request->email, $aUsuario[0]->nome);
-            
+            $mail->addAddress($request->email, utf8_decode($aUsuario[0]->nome));
+
             // Content
             $mail->isHTML(true);
             $mail->Subject = 'Esqueci minha senha';
@@ -219,7 +225,7 @@ class UsuarioController extends Controller
                                         		</thead>
                                         		<tbody>
                                         			<tr>
-                                        				<td><p style="padding-bottom:20px; text-align:center;">Ol&aacute;,'. $aUsuario[0]->nome.'</p>
+                                        				<td><p style="padding-bottom:20px; text-align:center;">Ol&aacute;,'. utf8_decode($aUsuario[0]->nome).'</p>
                                             				Foi solicitado o envio de sua senha para acessar o sistema.<br>
                                                             <p><strong>Email: </strong>'.$aUsuario[0]->email.'</p>
                                                             <p><strong>Senha: </strong>'.$aUsuario[0]->senha.'</p>
@@ -233,13 +239,13 @@ class UsuarioController extends Controller
                                         	</table>
                                            </body>
                                         </html>';
-            
+
             $mail->send();
-            
-            // Limpa os destinatários e os anexos
+
+            // Limpa os destinatï¿½rios e os anexos
             $mail->ClearAllRecipients();
             $mail->ClearAttachments();
-            
+
             $message[] = 'Senha enviada com sucesso!';
             $code      = 200;
             $redirect  = '/';
@@ -250,19 +256,19 @@ class UsuarioController extends Controller
         $code      = 500;
         $redirect  = '';
     }
-    
+
         # feedback
         $code = (!empty($code)) ? $code : 200;
         return response(['response' => $message, 'code' => $code]);
     }
-    
+
     public function notificacoes()
     {
         session_start();
-        
+
         $aRet          =  DB::select("SELECT * FROM notificacao WHERE notificacao.status = 0 and notificacao.id_usuario_recebe = ".$_SESSION['id']);
         $html          = '';
-        
+
         # Montagem Front Notificacoes
         for($i=0; $i < count($aRet); $i++)
         {
@@ -281,29 +287,29 @@ class UsuarioController extends Controller
             $html .= '</div>';
             $html .= '</div>';
         }
-        
+
         $aRet['total'] = count($aRet);
         $aRet['html']  = $html;
-        
+
         # feedback
         $code = (!empty($code)) ? $code : 200;
         return response(['response' => '', 'code' => $code, 'dados' => $aRet]);
     }
-    
+
     public function atualizanotificacoes(Request $request)
     {
         session_start();
-        
+
         $input   = $request->all();
-        
+
         $results = DB::table('notificacao')
         ->where('id', $input['id'])
         ->update(['status'   => 1
         ]);
-        
+
         $aRet          =  DB::select("SELECT * FROM notificacao WHERE notificacao.status = 0 and notificacao.id_usuario_recebe = ".$_SESSION['id']);
         $html          = '';
-        
+
         # Montagem Front Notificacoes
         for($i=0; $i < count($aRet); $i++)
         {
@@ -322,12 +328,181 @@ class UsuarioController extends Controller
             $html .= '</div>';
             $html .= '</div>';
         }
-        
+
         $aRet['total'] = count($aRet);
         $aRet['html']  = $html;
-        
+
         # feedback
         $code = (!empty($code)) ? $code : 200;
         return response(['response' => '', 'code' => $code, 'dados' => $aRet]);
+    }
+    public function listausuario()
+    {
+        session_start();
+        $aUsuarios = array();
+        $aUsuarios = DB::select('SELECT * FROM usuario WHERE usuario.status = 0');
+        return view('aprovacoes.usuarios')->with('usuarios', $aUsuarios);
+    }
+
+    public function aprovar(Request $request)
+    {
+        $input = $request->all();
+
+        $results = DB::table('usuario')
+        ->where('id', $input['id'])
+        ->update(['status' => '1']);
+
+        $aUsuario =  DB::select("SELECT * FROM usuario WHERE usuario.id = '" . $input['id'] . "'");
+        $mail     = new PHPMailer\PHPMailer();
+
+        if(!empty($aUsuario))
+        {
+            //Server settings
+            $mail->isSMTP();
+            $mail->Host = 'smtp.kinghost.net';
+            $mail->Port = 587;
+            $mail->SMTPSecure = 'tls';
+            $mail->SMTPAuth = true;
+            $mail->Username = "noreply@santistacontroleambiental.com.br";
+            $mail->Password = "WMorais@20";
+
+            //Recipients
+            $mail->setFrom('noreply@santistacontroleambiental.com.br', 'Santista Sistema');
+            $mail->addAddress($aUsuario[0]->email, utf8_decode($aUsuario[0]->nome));
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Usuario Aprovado - Sistema Santista Controle Ambiental';
+            $mail->Body    = '<html>
+                                        <head>
+                                        	<meta charset="utf-8"/>
+                                        	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                        	<title>Aprova&ccedil;&atilde;o de Usu&aacute;rio</title>
+                                        </head>
+                                        <body>
+                                            <style>
+                                            	* {
+                                            		font-size: 14px;
+                                            		line-height: 1.8em;
+                                            		font-family: arial;
+                                            	}
+                                            </style>
+                                        	<table style="margin:0 auto; max-width:660px;">
+                                        		<thead>
+                                        			<tr>
+                                        				<th><img src="http://cliente.santistacontroleambiental.com.br/assets/images/santista-controle-ambiental.png" />  </th>
+                                        			</tr>
+                                        		</thead>
+                                        		<tbody>
+                                        			<tr>
+                                        				<td><p style="padding-bottom:20px; text-align:center;">Ol&aacute;,'. utf8_decode($aUsuario[0]->nome).'</p>
+                                            				Seu usu&aacute;rio foi <strong>aprovado</strong> para acessar o sistema, abaixo suas credenciais:.<br>
+                                                            <p><strong>Email: </strong>'.$aUsuario[0]->email.'</p>
+                                                            <p><strong>Senha: </strong>'.$aUsuario[0]->senha.'</p>
+                                        				</td>
+                                        			</tr>
+                                        			<tr>
+                                        				<td>
+                                        				</td>
+                                        			</tr>
+                                        		</tbody>
+                                        	</table>
+                                           </body>
+                                        </html>';
+
+            $mail->send();
+
+            // Limpa os destinatï¿½rios e os anexos
+            $mail->ClearAllRecipients();
+            $mail->ClearAttachments();
+
+            $message[] = 'Usu&aacute;rio aprovado com sucesso!';
+            $code = 200;
+            $redirect = '/aprovacoes/usuarios';
+        }
+
+        # feedback
+        $code = (!empty($code)) ? $code : 200;
+        return response(['response' => $message, 'code' => $code, 'redirect' => $redirect]);
+    }
+
+    public function reprovar(Request $request)
+    {
+        $input = $request->all();
+
+        $results = DB::table('usuario')
+        ->where('id', $input['id'])
+        ->update(['status' => '2']);
+
+        $aUsuario =  DB::select("SELECT * FROM usuario WHERE usuario.id = '" . $input['id'] . "'");
+        $mail     = new PHPMailer\PHPMailer();
+
+        if(!empty($aUsuario))
+        {
+            //Server settings
+            $mail->isSMTP();
+            $mail->Host = 'smtp.kinghost.net';
+            $mail->Port = 587;
+            $mail->SMTPSecure = 'tls';
+            $mail->SMTPAuth = true;
+            $mail->Username = "noreply@santistacontroleambiental.com.br";
+            $mail->Password = "WMorais@20";
+
+            //Recipients
+            $mail->setFrom('noreply@santistacontroleambiental.com.br', 'Santista Sistema');
+            $mail->addAddress($aUsuario[0]->email, utf8_decode($aUsuario[0]->nome));
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Aprovaï¿½ï¿½o de Usuï¿½rio';
+            $mail->Body    = '<html>
+                                        <head>
+                                        	<meta charset="utf-8"/>
+                                        	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+                                        	<title>Aprova&ccedil;&atilde;o de Usu&aacute;rio</title>
+                                        </head>
+                                        <body>
+                                            <style>
+                                            	* {
+                                            		font-size: 14px;
+                                            		line-height: 1.8em;
+                                            		font-family: arial;
+                                            	}
+                                            </style>
+                                        	<table style="margin:0 auto; max-width:660px;">
+                                        		<thead>
+                                        			<tr>
+                                        				<th><img src="http://cliente.santistacontroleambiental.com.br/assets/images/santista-controle-ambiental.png" />  </th>
+                                        			</tr>
+                                        		</thead>
+                                        		<tbody>
+                                        			<tr>
+                                        				<td><p style="padding-bottom:20px; text-align:center;">Ol&aacute;,'. utf8_decode($aUsuario[0]->nome).'</p>
+                                            				Seu usu&aacute;rio foi <strong>reprovado</strong> para acessar o sistema.<br>
+                                        				</td>
+                                        			</tr>
+                                        			<tr>
+                                        				<td>
+                                        				</td>
+                                        			</tr>
+                                        		</tbody>
+                                        	</table>
+                                           </body>
+                                        </html>';
+
+            $mail->send();
+
+            // Limpa os destinatï¿½rios e os anexos
+            $mail->ClearAllRecipients();
+            $mail->ClearAttachments();
+
+            $message[] = 'Usu&aacute;rio reprovado com sucesso!';
+            $code = 200;
+            $redirect = '/aprovacoes/usuarios';
+        }
+
+        # feedback
+        $code = (!empty($code)) ? $code : 200;
+        return response(['response' => $message, 'code' => $code, 'redirect' => $redirect]);
     }
 }

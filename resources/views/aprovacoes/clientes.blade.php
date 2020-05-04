@@ -1,10 +1,10 @@
 @extends('layouts.master')
 @section('main-content')
 <div class="breadcrumb">
-    <h1>Aprovação de Clientes</h1>
+    <h1>Aprovação de Usuários em Empresas</h1>
     <ul>
         <li><a href="">Dashboard</a></li>
-        <li>Aprovação Clientes</li>
+        <li>Aprovação de Usuários em Empresas</li>
     </ul>
 </div>
 
@@ -47,9 +47,9 @@
                                                 		<td><a href="#" title="Aprovar" onclick="AprovarSolicitacao(<?php echo($cliente->solicitacao_id);?>);" class="aprovar"><i class="text-20 i-Like"></i></a> <a href="#" title="Reprovar" onclick="ReprovarSolicitacao(<?php echo($cliente->solicitacao_id);?>);" class="reprovar"><i class="text-20 i-Close-Window"></i></a></td>
                                                 <?php }else{?>
                                  							<td></td>
-                             						<?php }?>		
+                             						<?php }?>
                                             </tr>
-                                            <?php endforeach; ?>    
+                                            <?php endforeach; ?>
                                         </tbody>
                                         <tfoot>
                                             <tr>

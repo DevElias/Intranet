@@ -6,22 +6,75 @@ $('#senha').on('keydown', function (e)
     }
 })
 
+// Validacoes
+$("#nome").blur(function()
+{
+	Valida('nome');
+});
+
+$("#email").blur(function()
+{
+	Valida('email');
+});
+
+$("#nascimento").blur(function()
+{
+	Valida('nascimento');
+});
+
+$("#telefone").blur(function()
+{
+	Valida('telefone');
+});
+
+$("#whatsapp").blur(function()
+{
+	Valida('whatsapp');
+});
+
+$("#cep").blur(function()
+{
+	Valida('cep');
+});
+
+$("#numero").blur(function()
+{
+	Valida('numero');
+});
+
+$("#senha").blur(function()
+{
+	Valida('senha');
+});
+
+$("#password").blur(function()
+{
+	Valida('password');
+});
+
 //Validacao cpf
 $("#cpf").blur(function(){
 	bcpf = TestaCPF($('#cpf').val().replace(/[^\d]+/g,''));
-	
+
 	if(bcpf === false)
 	{
-		$.confirm({
-    		title: 'Alerta de Segurança',
-    		content: 'CPF Inválido',
-		    buttons: {
-		        ok: function(){
-		        	$("#cpf").val('');
-		        	$("#cpf").focus();
-		        }
-		    }
-		});
+		$("#gravar").prop("disabled",true);
+		$("#cpf").removeClass("errocpf");
+		$("#cpf").attr("style", "");
+		$(".errorC").remove();
+
+		var msg = 'CPF Inválido';
+		$( "#cpf" ).focus();
+	    $("#cpf").addClass("errocpf");
+	    $(".errocpf").css("border", "1px solid red").after('<p class="errorC" style="color:red;">' + msg + '</p>');
+	    return false;
+	}
+	else
+	{
+		$("#gravar").prop("disabled",false);
+		$("#cpf").removeClass("errocpf");
+		$("#cpf").attr("style", "");
+		$(".errorC").remove();
 	}
 });
 
@@ -47,6 +100,16 @@ $("#esqueci").click(function() {
 
 function Cadastrar()
 {
+	Valida('nome');
+	Valida('email');
+	Valida('nascimento');
+	Valida('telefone');
+	Valida('whatsapp');
+	Valida('cep');
+	Valida('numero');
+	Valida('senha');
+	Valida('password');
+
 	oData = new Object();
 	oData.nome        = $('#nome').val();
 	oData.email       = $('#email').val();
@@ -71,18 +134,33 @@ function Cadastrar()
     .done(function(resp){
     	if(resp)
 		{
-    		$.confirm({
-    			title: 'Alerta de Segurança',
-    			content: resp['response'],
-			    buttons: {
-			        ok: function(){
-			        	if(resp['redirect'])
-		        		{
-			        		location.href = resp['redirect'];
-		        		}
-			        }
-			    }
-			});
+    		if(resp['code'] == 200)
+			{
+    			$.confirm({
+        			title: 'Alerta de Segurança',
+        			content: resp['response'],
+    			    buttons: {
+    			        ok: function(){
+    			        	if(resp['redirect'])
+    		        		{
+    			        		location.href = resp['redirect'];
+    		        		}
+    			        }
+    			    }
+    			});
+			}
+    		else
+			{
+    			$.confirm({
+        			title: 'Alerta de Segurança',
+        			content: resp['response'],
+    			    buttons: {
+    			        ok: function(){
+    			        	
+    			        }
+    			    }
+    			});
+			}
 		}
     })
 }
@@ -212,7 +290,7 @@ function AtualizaNotificacao(id)
 {
 	oData    = new Object();
 	oData.id = id;
-	
+
 	$.ajax({
         url: "/atualiza/notificacoes",
         method: "POST",
@@ -231,18 +309,112 @@ function TestaCPF(strCPF) {
     var Resto;
     Soma = 0;
   if (strCPF == "00000000000") return false;
-     
+
   for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
   Resto = (Soma * 10) % 11;
-   
+
     if ((Resto == 10) || (Resto == 11))  Resto = 0;
     if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
-   
+
   Soma = 0;
     for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
     Resto = (Soma * 10) % 11;
-   
+
     if ((Resto == 10) || (Resto == 11))  Resto = 0;
     if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
     return true;
+}
+
+function Valida(campo)
+{
+	if($('#'+campo).val() == '')
+	{
+		 $("#"+campo).removeClass("erro"+campo);
+		 $("#"+campo).attr("style", "");
+		 $(".errorC").remove();
+	     $("#"+campo).addClass("erro"+campo);
+	     $(".erro"+campo).css("border", "1px solid red").after('<p class="errorC" style="color:red;">' + '</p>');
+	     return false;
+	}
+	else
+	{
+		$("#"+campo).removeClass("erro"+campo);
+		$("#"+campo).attr("style", "");
+		$(".errorC").remove();
+	}
+}
+
+function AprovarUsuario(id)
+{
+	oData = new Object();
+	oData.id = id;
+
+	$.ajax({
+        url: "/aprovar/usuario",
+        method: "POST",
+        data: oData
+    })
+    .done(function(resp){
+    	if(resp)
+		{
+    		$.confirm({
+    			title: 'Alerta de Segurança',
+    			content: resp['response'],
+			    buttons: {
+			        ok: function(){
+			        	if(resp['redirect'])
+		        		{
+			        		location.href = resp['redirect'];
+		        		}
+			        }
+			    }
+			});
+		}
+    })
+}
+
+function ReprovarUsuario(id)
+{
+	oData = new Object();
+	oData.id = id;
+
+    $.confirm({
+    	title: 'Alerta de Segurança',
+    	content: 'Deseja realmente reprovar esta usuario?',
+        buttons: {
+            specialKey: {
+                text: 'Sim',
+                action: function(){
+                	$.ajax({
+                        url: "/reprovar/usuario",
+                        method: "POST",
+                        data: oData
+                    })
+                    .done(function(resp){
+    	if(resp)
+		{
+    		$.confirm({
+    			title: 'Alerta de Segurança',
+    			content: resp['response'],
+			    buttons: {
+			        ok: function(){
+			        	if(resp['redirect'])
+		        		{
+			        		location.href = resp['redirect'];
+		        		}
+			        }
+			    }
+			});
+		}
+    })
+                }
+            },
+            alphabet: {
+                text: 'Nao',
+                action: function(){
+                    return;
+                }
+            }
+        }
+    });
 }

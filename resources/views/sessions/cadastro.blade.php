@@ -25,15 +25,15 @@
                                 <h1 class="mb-3 text-18">Cadastre-se</h1>
                                 <form method="POST" action="#">
                                     <div class="form-group row">
-                                    <div class="col-6">
-                                        <label for="nome">Nome Completo</label>
+                                    <div class="col-12 col-md-6">
+                                        <label for="nome">Nome Completo *</label>
                                         <input id="nome" type="text"
                                             class="form-control-rounded form-control"
                                             name="nome" required autocomplete="name"
                                             autofocus>
                                     </div>
-                                    <div class="col-6">
-                                        <label for="email">Email</label>
+                                    <div class="col-12 col-md-6">
+                                        <label for="email">Email *</label>
                                         <input id="email" type="email"
                                             class="form-control-rounded form-control"
                                             name="email" required autocomplete="email">
@@ -41,15 +41,15 @@
 
                                     </div>
                                     <div class="form-group row">
-                                    <div class="col-6">
-                                        <label for="cpf">CPF</label>
+                                    <div class="col-12 col-md-6">
+                                        <label for="cpf">CPF *</label>
                                         <input id="cpf" type="text"
                                             class="form-control-rounded form-control"
                                             name="cpf"  required
                                             autofocus>
                                     </div>
-                                    <div class="col-6">
-                                    <label for="nascimento">Data de Nascimento</label>
+                                    <div class="col-12 col-md-6">
+                                    <label for="nascimento">Data de Nascimento *</label>
                                         <input id="nascimento" type="text"
                                             class="form-control-rounded form-control"
                                             name="nascimento" required
@@ -57,15 +57,15 @@
                                     </div>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-6">
-                                                <label for="tel">Telefone</label>
+                                        <div class="col-12 col-md-6">
+                                                <label for="tel">Telefone *</label>
                                                 <input id="telefone" type="text"
                                             class="form-control-rounded form-control"
                                             name="telefone" required
                                             autofocus>
                                         </div>
-                                        <div class="col-6">
-                                            <label for="whats">Whatsapp</label>
+                                        <div class="col-12 col-md-6">
+                                            <label for="whats">Whatsapp *</label>
                                             <input id="whatsapp" type="text"
                                             class="form-control-rounded form-control"
                                             name="whatsapp" required
@@ -73,15 +73,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                    <div class="col-3">
-                                        <label for="cep">CEP</label>
+                                    <div class="col-12 col-md-3">
+                                        <label for="cep">CEP *</label>
                                         <input id="cep" type="text"
                                             class="form-control-rounded form-control"
                                             name="cep" required
                                             autofocus>
                                     </div>
-                                    <div class="col-9">
-                                        <label for="endereco">Endereço</label>
+                                    <div class="col-12 col-md-9">
+                                        <label for="endereco">Endereço *</label>
                                         <input id="endereco" type="text"
                                             class="form-control-rounded form-control"
                                             name="endereco" required
@@ -89,14 +89,14 @@
                                     </div>
                                     </div>
                                     <div class="row form-group">
-                                    <div class="col-3">
-                                        <label for="numero">Numero</label>
+                                    <div class="col-12 col-md-3">
+                                        <label for="numero">Numero *</label>
                                         <input id="numero" type="text"
                                             class="form-control-rounded form-control"
                                             name="numero" required
                                             autofocus>
                                     </div>
-                                    <div class="col-9">
+                                    <div class="col-12 col-md-9">
                                         <label for="complemento">Complemento</label>
                                         <input id="complemento" type="text"
                                             class="form-control-rounded form-control"
@@ -105,22 +105,22 @@
                                     </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="bairro">Bairro</label>
+                                        <label for="bairro">Bairro *</label>
                                         <input id="bairro" type="text"
                                             class="form-control-rounded form-control"
                                             name="bairro" required
                                             autofocus>
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-6">
-                                            <label for="cidade">Cidade</label>
+                                        <div class="col-12 col-md-6">
+                                            <label for="cidade">Cidade *</label>
                                             <input id="cidade" type="text"
                                                 class="form-control-rounded form-control"
                                                 name="cidade" required
                                                 autofocus>
                                         </div>
-                                        <div class="col-6">
-                                        <label for="estado">Estado</label>
+                                        <div class="col-12 col-md-6">
+                                        <label for="estado">Estado *</label>
                                             <input id="estado" type="text"
                                                 class="form-control-rounded form-control"
                                                 name="estado" required
@@ -128,14 +128,14 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                    <div class="col-6">
-                                        <label for="password">Senha</label>
+                                    <div class="col-12 col-md-6">
+                                        <label for="password">Senha *</label>
                                         <input id="senha" type="password"
                                             class="form-control-rounded form-control"
                                             name="senha" required>
                                      </div>
-                                     <div class="col-6">
-                                        <label for="password">Confirmar Senha</label>
+                                     <div class="col-12 col-md-6">
+                                        <label for="password">Confirmar Senha *</label>
                                         <input id="password" type="password"
                                             class="form-control-rounded form-control"
                                             name="password" required>

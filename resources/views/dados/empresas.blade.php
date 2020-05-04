@@ -1,10 +1,10 @@
 @extends('layouts.master')
 @section('main-content')
 <div class="breadcrumb">
-    <h1>Clientes</h1>
+    <h1>Empresas</h1>
     <ul>
         <li><a href="">Dashboard</a></li>
-        <li>Dados de Clientes</li>
+        <li>Dados de Empresa</li>
     </ul>
 </div>
 
@@ -22,6 +22,7 @@
                     <th>Telefone</th>
                     <th>Whatsapp</th>
                     <th>Status</th>
+                    <th>Alteração</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,6 +46,9 @@
                             <span class="btn btn-danger m-1">Reprovado</span>
                             <?php }?>
                         </td>
+                        <td>
+                        <a href="#" onclick="ReprovarEmpresa(<?php echo($empresa->id);?>);" title="Reprovar" class="reprovar">
+                        <i class="text-20 i-Close-Window"></i></a> </td>
 
                     </tr>
                 <?php endforeach; ?>
@@ -58,6 +62,7 @@
                     <th>Telefone</th>
                     <th>Whatsapp</th>
                     <th>Status</th>
+                    <th>Alteração</th>
                 </tr>
             </tfoot>
         </table>
@@ -87,6 +92,11 @@
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
         }); // feature enable/disable
+        setTimeout(
+            function()
+            {
+                $('.buttons-print span').html('Imprimir')
+            }, 500);
     });
 </script>
 @endsection

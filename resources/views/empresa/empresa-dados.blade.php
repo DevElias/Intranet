@@ -245,6 +245,13 @@
                                             name="estado" value="<?php echo($dados['info']->estado); ?>" required
                                             autofocus>
                                     </div>
+                                    <div class="col-6">
+                                <label for="complemento">Segmento</label>
+                                <input id="segmento" type="text"
+                                    class="form-control-rounded form-control"
+                                    name="complemento" value="<?php echo($dados['info']->segmento); ?>" required
+                                    autofocus>
+                            </div>
                                 </div>
                                 <div class="form-group text-right">
                                     <button type="button" id="atualizar-empresa" class="btn btn-primary btn-rounded mt-3">Atualizar</button>

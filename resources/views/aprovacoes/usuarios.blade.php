@@ -1,10 +1,10 @@
 @extends('layouts.master')
 @section('main-content')
 <div class="breadcrumb">
-    <h1>Clientes</h1>
+    <h1>Usuários</h1>
     <ul>
         <li><a href="">Dashboard</a></li>
-        <li>Dados de Clientes</li>
+        <li>Dados de Usuários</li>
     </ul>
 </div>
 
@@ -21,10 +21,11 @@
                     <th>Whastapp</th>
                     <th>CPF</th>
                     <th>Status</th>
+                    <th>Opções</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($clientes as $cliente): ?>
+                <?php foreach ($usuarios as $cliente): ?>
                     <tr>
                         <td><?php echo($cliente->nome);?></td>
                         <td><?php echo($cliente->email);?></td>
@@ -43,6 +44,14 @@
                         <span class="btn btn-danger m-1">Reprovado</span>
                         <?php }?>
                         </td>
+                        <?php
+                        if($_SESSION['tipo'] == '0')
+                                {
+                            ?>
+                                <td><a href="#" title="Aprovar" onclick="AprovarUsuario(<?php echo($cliente->id);?>);" class="aprovar"><i class="text-20 i-Like"></i></a> <a href="#" title="Reprovar" onclick="ReprovarUsuario(<?php echo($cliente->id);?>);" class="reprovar"><i class="text-20 i-Close-Window"></i></a></td>
+                        <?php }else{?>
+                                    <td></td>
+                            <?php }?>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -54,6 +63,7 @@
                     <th>Whastapp</th>
                     <th>CPF</th>
                     <th>Status</th>
+                    <th>Opções</th>
                 </tr>
             </tfoot>
         </table>
@@ -68,7 +78,7 @@
 <script src="{{asset('assets/js/es5/dashboard.v1.script.js')}}"></script>
 <script src="{{asset('assets/js/vendor/datatables.min.js')}}"></script>
 <script src="{{asset('assets/js/jquery.mask.min.js')}}"></script>
-<script src="{{asset('assets/js/empresa/empresa.js')}}"></script>
+<script src="{{asset('assets/js/usuario/usuario.js')}}"></script>
 <script src="{{asset('assets/js/jquery-confirm.js')}}"></script>
 <script src="{{asset('assets/js/sistema.js')}}"></script>
 <script>
@@ -78,16 +88,7 @@
             "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Portuguese-Brasil.json"
         },
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-        }); // feature enable/disable
-        setTimeout(
-            function()
-            {
-                $('.buttons-print span').html('Imprimir')
-            }, 500);
+        });
     });
 </script>
 @endsection

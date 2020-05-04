@@ -14,22 +14,60 @@ $('#cnpj-empresa').on('keydown', function (e)
     }
 })
 
+// Validacoes
+$("#fantasia").blur(function()
+{
+	Valida('fantasia');
+});
+
+$("#social").blur(function()
+{
+	Valida('social');
+});
+
+$("#email").blur(function()
+{
+	Valida('email');
+});
+
+$("#tel").blur(function()
+{
+	Valida('tel');
+});
+
+$("#cep").blur(function()
+{
+	Valida('cep');
+});
+
+$("#numero").blur(function()
+{
+	Valida('numero');
+});
+
 //Validacao CNPJ
 $("#cnpj").blur(function(){
 	bcnpj = validarCNPJ($('#cnpj').val());
 	
 	if(bcnpj === false)
 	{
-		$.confirm({
-    		title: 'Alerta de Segurança',
-    		content: 'CNPJ Inválido',
-		    buttons: {
-		        ok: function(){
-		        	$("#cnpj").val('');
-		        	$("#cnpj").focus();
-		        }
-		    }
-		});
+		$("#gravar").prop("disabled",true);
+		$("#cnpj").removeClass("errocnpj");
+		$("#cnpj").attr("style", "");
+		$(".errorC").remove();
+		
+		var msg = 'CNPJ Inválido';
+		$( "#cnpj" ).focus();
+	    $("#cnpj").addClass("errocnpj");
+	    $(".errocnpj").css("border", "1px solid red").after('<p class="errorC" style="color:red;">' + msg + '</p>');
+	    return false;
+	}
+	else
+	{
+		$("#gravar").prop("disabled",false);
+		$("#cnpj").removeClass("errocnpj");
+		$("#cnpj").attr("style", "");
+		$(".errorC").remove();
 	}
 });
 
@@ -70,6 +108,14 @@ $("#atualizar-empresa").click(function() {
 
 function Cadastrar()
 {
+	
+	Valida('fantasia');
+	Valida('social');
+	Valida('email');
+	Valida('tel');
+	Valida('cep');
+	Valida('numero');
+	
 	oData = new Object();
 	oData.fantasia    = $('#fantasia').val();
 	oData.social      = $('#social').val();
@@ -84,6 +130,7 @@ function Cadastrar()
 	oData.bairro      = $('#bairro').val();
 	oData.cidade      = $('#cidade').val();
 	oData.estado      = $('#estado').val();
+	oData.segmento    = $('#segmento').val();
 	oData.responsavel = $('#responsavel').val();
 
 	$.ajax({
@@ -94,18 +141,21 @@ function Cadastrar()
     .done(function(resp){
     	if(resp)
 		{
-    		$.confirm({
-    			title: 'Alerta de Segurança',
-    			content: resp['response'],
-			    buttons: {
-			        ok: function(){
-			        	if(resp['redirect'])
-		        		{
-			        		location.href = resp['redirect'];
-		        		}
-			        }
-			    }
-			});
+    		if(resp['code'] == 200)
+			{
+    			$.confirm({
+        			title: 'Alerta de Segurança',
+        			content: resp['response'],
+    			    buttons: {
+    			        ok: function(){
+    			        	if(resp['redirect'])
+    		        		{
+    			        		location.href = resp['redirect'];
+    		        		}
+    			        }
+    			    }
+    			});
+			}
 		}
     })
 }
@@ -422,6 +472,7 @@ function Atualizar()
 	oData.bairro      = $('#bairro').val();
 	oData.cidade      = $('#cidade').val();
 	oData.estado      = $('#estado').val();
+	oData.segmento    = $('#segmento').val();
 	oData.id          = $('#idempresa').val();
 
 	$.ajax({
@@ -499,4 +550,69 @@ function validarCNPJ(cnpj)
           return false;
            
     return true;
+}
+
+function Valida(campo)
+{
+	if($('#'+campo).val() == '')
+	{
+		 $("#"+campo).removeClass("erro"+campo);
+		 $("#"+campo).attr("style", "");
+		 $(".errorC").remove();
+	     $("#"+campo).addClass("erro"+campo);
+	     $(".erro"+campo).css("border", "1px solid red").after('<p class="errorC" style="color:red;">' + '</p>');
+	     return false;
+	}
+	else
+	{
+		$("#"+campo).removeClass("erro"+campo);
+		$("#"+campo).attr("style", "");
+		$(".errorC").remove();
+	}
+}
+
+function ReprovarEmpresa(id)
+{
+	oData = new Object();
+	oData.id = id;
+
+    $.confirm({
+    	title: 'Alerta de Segurança',
+    	content: 'Deseja realmente reprovar esta empresa?',
+        buttons: {
+            specialKey: {
+                text: 'Sim',
+                action: function(){
+                	$.ajax({
+                        url: "/reprovar/empresa",
+                        method: "POST",
+                        data: oData
+                    })
+                    .done(function(resp){
+    	if(resp)
+		{
+    		$.confirm({
+    			title: 'Alerta de Segurança',
+    			content: resp['response'],
+			    buttons: {
+			        ok: function(){
+			        	if(resp['code'] == '200')
+		        		{
+			        		location.reload();
+		        		}
+			        }
+			    }
+			});
+		}
+    })
+                }
+            },
+            alphabet: {
+                text: 'Nao',
+                action: function(){
+                    return;
+                }
+            }
+        }
+    });
 }

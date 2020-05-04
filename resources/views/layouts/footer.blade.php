@@ -6,8 +6,8 @@
         <div class="d-flex align-items-center">
             <img class="logo" src="{{asset('assets/images/logo.png')}}" alt="">
             <div>
-                <p class="m-0">&copy; 2020 Santista Ambiente</p>
-                <p class="m-0">Todos os direitos Reservados</p>
+                <p class="m-0">&copy; 2020 Santista Controle Ambiental - Todos os direitos Reservados</p>
+                <p class="m-0">Desenvolvido por <a href="https://wmorais.com.br" target="_blank" style="font-weight:bold;">WMORAIS Soluções Digitais</a></p>
             </div>
         </div>
     </div>

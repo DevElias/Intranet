@@ -1,9 +1,9 @@
 @extends('layouts.master')
 @section('main-content')
 <div class="breadcrumb">
-    <h1>Dashboard</h1>
+    <h1>Infos Gerais</h1>
     <ul>
-        <li><a href="">Dashboard</a></li>
+        <li><a href="">Infos Gerais</a></li>
         <li>Admin</li>
     </ul>
 </div>
